@@ -17,10 +17,9 @@ project 2 - Going through various pages of student information
   If something is unclear in this code, please contact me.
 */
 
-// First function
 function showPage (list, page) {
   // We wish to display the information of 9 students per page. Here I collect the index number of the first and final student to be displayed on the web page.
-  // The content is thus dependent on the page to be selected by the second function 'addPagination'.
+  // The content is thus dependent on the page to be selected by the function 'addPagination'.
   const itemsPerPage = 9;
   const startIndex = (page * itemsPerPage) - itemsPerPage;
   const endIndex = page * itemsPerPage;
@@ -29,7 +28,7 @@ function showPage (list, page) {
   // Loop over the list-parameter (which represents the dataset of students) in order to collect their information and format it HTML-style.
   for(let i = 0 ; i < list.length; i++) {
     if(i >= startIndex && i < endIndex) {
-      let listItem = `
+      const listItem = `
       <li class="student-item cf">
         <div class="student-details">
           <img class="avatar" src=${list[i].picture.large} alt="Profile Picture">
@@ -48,16 +47,13 @@ function showPage (list, page) {
   }
 }
 
-
-// Second function
 function addPagination(list) {
-  // Calculate the required number of pages needed to display all selected students. Round off to the upper integer (if there are 10 students and
-  // we can display 9 students per page then we need 2 pages (10 / 9 is more than 1 so to round this off we get 2).
+  // For numberOfPages, round off to the upper integer (if there are 10 students and we can display 9 students per page
+  // then we need 2 pages (10 / 9 is more than 1 so to round this off we get 2).
   let numberOfPages = Math.ceil(list.length / 9);
-  let pageList = document.querySelector('.link-list');
+  const pageList = document.querySelector('.link-list');
   pageList.innerHTML = '';
 
-  // Loop over the number of pages to assign each a button with the correct page number.
   // Only execute the loop + create page buttons if the numberOfPages is defined (thus, if there is at least 1 student included in the list-parameter)
   if (numberOfPages) {
     for (let i = 1; i < numberOfPages +1 ; i++) {
@@ -81,18 +77,17 @@ function addPagination(list) {
         showPage(list, e.target.textContent);
       }
     });
-  // If numberOfPages does not exist (aka, the list of students is emty, print the message "No results found" to the web page)
+  // If the list of students is emty, print the message "No results found" to the web page
   } else {
-    let message = document.createElement('h3');
-    h2.appendChild(message);
+    const message = document.createElement('h3');
+    header.appendChild(message);
     message.innerHTML = "No results found";
   }
 }
 
-// Creating the search bar elements and appending them to the h2-element:
-const h2 = document.querySelector('h2');
-const searchBar = document.createElement('div');
-h2.appendChild(searchBar);
+const header = document.querySelector('header');
+let searchBar = document.createElement('div');
+header.appendChild(searchBar);
 const searchContent = `
       <label for="search" class="student-search">
         <input id="search" placeholder="Search by name...">
@@ -103,18 +98,13 @@ searchBar.innerHTML = searchContent;
 const searchButton = document.querySelector('label button');
 const searchInput = document.querySelector('label input');
 
-// Creating an addEventListener to the search button. Pushing the searched content to 'text'. The content of text is compared with the first names and last names of the students in the data list.
 // If the first or last name of a student contains the content of 'text', then the student will be included in the 'new student list' (called 'searchData').
-//
 searchButton.addEventListener('click', () => {
   // Remove any existing messages displayed on screen
-  let message = document.querySelector('h3');
+  const message = document.querySelector('h3');
   message.innerHTML = '';
-  // Save the input value in variable 'text'
   const text = searchInput.value;
-  //For each new search, the database with students to be searched starts off empty:
   let searchData = [];
-  // Loop through all students in the 'data'-database and push the ones that meet the conditions to 'searchData'.
   for(let i = 0; i < data.length; i++) {
     if( data[i].name.first.toUpperCase().includes(text.toUpperCase()) || data[i].name.last.toUpperCase().includes(text.toUpperCase()) ) {
       searchData.push(data[i]);
@@ -127,7 +117,6 @@ searchButton.addEventListener('click', () => {
   searchInput.value = '';
 });
 
-// Run the functions, calling the data as collected in data.js with information on all the Students
-// and the number 1 for the parameter 'page' as to initially open the web page on page 1.
+// While running showPage, let parameter 'page'=1 as to initially open the web page on page 1
 showPage(data, 1);
 addPagination(data);
